@@ -1,0 +1,156 @@
+{
+  "commit": "0cf52bd",
+  "pytest": "...........                                                              [100%]\n11 passed in 0.18s",
+  "times": {
+    "fetch": {
+      "wall_s": 73.4,
+      "peak_rss_gb": 0.08,
+      "exit": 0
+    },
+    "score_raw": {
+      "wall_s": 6.7,
+      "peak_rss_gb": 2.39,
+      "exit": 0
+    },
+    "generate": {
+      "wall_s": 278.1,
+      "peak_rss_gb": 9.0,
+      "exit": 0
+    },
+    "score_claims": {
+      "wall_s": 59.3,
+      "peak_rss_gb": 23.67,
+      "exit": 0
+    },
+    "every50": {
+      "wall_s": 222.2,
+      "peak_rss_gb": 7.02,
+      "exit": 0
+    }
+  },
+  "criteria": {
+    "install_and_tests": {
+      "pass": true,
+      "measured": {
+        "pytest": "...........                                                              [100%]\n11 passed in 0.18s",
+        "numpy": "2.5.4",
+        "scipy": "1.18.1"
+      }
+    },
+    "fetch_checksums": {
+      "pass": true,
+      "measured": {
+        "files_checked": 42,
+        "mismatches": [],
+        "wall_s": 73.4,
+        "peak_rss_gb": 0.08,
+        "exit": 0
+      }
+    },
+    "raw_crossings_heldout": {
+      "pass": true,
+      "measured": {
+        "tests": 2489,
+        "adjacent_tests": 1159,
+        "adjacent_exact_count": 889,
+        "adjacent_exact": 0.7670405522001725,
+        "wall_s": 6.7,
+        "peak_rss_gb": 2.39,
+        "exit": 0
+      }
+    },
+    "generator_whole_volume": {
+      "pass": true,
+      "measured": {
+        "out": "claims.json",
+        "tau": 0.74,
+        "chains": 8268376,
+        "points": 20064412,
+        "crossings_in": 22706484,
+        "seconds": 277.8,
+        "wall_s": 278.1,
+        "peak_rss_gb": 9.0,
+        "exit": 0,
+        "bytes": 3996188872
+      }
+    },
+    "generated_heldout": {
+      "pass": true,
+      "measured": {
+        "tests": 1060,
+        "exact_count": 972,
+        "adjacent_tests": 721,
+        "adjacent_exact_count": 659,
+        "adjacent_covered_count": 389,
+        "human_adjacent_pairs": 974,
+        "adjacent_exact": 0.9140083217753121,
+        "human_adjacent_covered": 0.3993839835728953,
+        "wall_s": 59.3,
+        "peak_rss_gb": 23.67,
+        "exit": 0
+      }
+    },
+    "loads_in_villa": {
+      "pass": true,
+      "measured": {
+        "written": {
+          "out": "claims_every50.json",
+          "tau": 0.74,
+          "chains": 165568,
+          "points": 402054,
+          "crossings_in": 22706484,
+          "seconds": 221.9
+        },
+        "wall_s": 222.2,
+        "peak_rss_gb": 7.02,
+        "exit": 0,
+        "villa_collections": 165568,
+        "villa_points": 402054,
+        "villa_commit": "47111d1a31381a5ff2c05046ed3e311b0dbeec64",
+        "villa_stderr_tail": ""
+      }
+    },
+    "geometry_only": {
+      "pass": true,
+      "measured": {
+        "keys": {
+          "claims": [
+            "collections",
+            "color",
+            "confidence",
+            "creation_time",
+            "metadata",
+            "name",
+            "p",
+            "points",
+            "source",
+            "tags",
+            "tau",
+            "vc_pointcollections_json_version",
+            "wind_a",
+            "winding_is_absolute"
+          ],
+          "claims_every50": [
+            "collections",
+            "color",
+            "confidence",
+            "creation_time",
+            "metadata",
+            "name",
+            "p",
+            "points",
+            "source",
+            "tags",
+            "tau",
+            "vc_pointcollections_json_version",
+            "wind_a",
+            "winding_is_absolute"
+          ]
+        },
+        "unexpected_keys": [],
+        "other_images": []
+      }
+    }
+  },
+  "all_pass": true
+}

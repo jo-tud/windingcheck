@@ -1,0 +1,416 @@
+{
+  "raw_crossings_all_chains": {
+    "tests": 5298,
+    "exact": 0.7576443941109853,
+    "human_pairs_covered": 0.16343967053906203
+  },
+  "train": {
+    "step_rows": 1398,
+    "step_rows_right": 0.723175965665236,
+    "adjacent_tests": 1200
+  },
+  "model": {
+    "features": [
+      "log_s_ray",
+      "log_s_ray2",
+      "nbr_agree",
+      "log_support",
+      "edge",
+      "oblique",
+      "log_r"
+    ],
+    "mean": [
+      0.007539314230980909,
+      0.07626271649118169,
+      0.9547109973583059,
+      2.463947889546035,
+      0.32368763556822105,
+      0.15631936338690133,
+      6.575691909320765
+    ],
+    "std": [
+      0.2760541174918722,
+      0.13487017313058353,
+      0.12155358082299852,
+      0.44397791031183087,
+      0.21469969615929968,
+      0.15100994889238592,
+      0.6693590258077745
+    ],
+    "coef": [
+      1.1220972341423103,
+      0.670885746332202,
+      -0.12848609438453262,
+      0.21737343418392002,
+      -0.45110192204769683,
+      -0.030537922039150914,
+      -0.433077970966488,
+      -0.5680481470694239
+    ]
+  },
+  "discrimination_calibration": {
+    "heldout_adjacent_tests": 1159,
+    "heldout_adjacent_exact_raw": 0.7670405522001725,
+    "auc": 0.8754947298254385,
+    "ece_adjacent": 0.08704699253599293,
+    "reliability_adjacent": [
+      {
+        "n": 116,
+        "mean_p": 0.30259788013096217,
+        "exact": 0.21551724137931033
+      },
+      {
+        "n": 116,
+        "mean_p": 0.4941080174843519,
+        "exact": 0.46551724137931033
+      },
+      {
+        "n": 116,
+        "mean_p": 0.5871523972476275,
+        "exact": 0.5344827586206896
+      },
+      {
+        "n": 116,
+        "mean_p": 0.6684591327932894,
+        "exact": 0.7844827586206896
+      },
+      {
+        "n": 116,
+        "mean_p": 0.7278260249249674,
+        "exact": 0.853448275862069
+      },
+      {
+        "n": 116,
+        "mean_p": 0.7911535257374748,
+        "exact": 0.9396551724137931
+      },
+      {
+        "n": 116,
+        "mean_p": 0.8361960825107057,
+        "exact": 0.9482758620689655
+      },
+      {
+        "n": 116,
+        "mean_p": 0.8766864525833217,
+        "exact": 0.9482758620689655
+      },
+      {
+        "n": 116,
+        "mean_p": 0.9108447697368213,
+        "exact": 0.9827586206896551
+      },
+      {
+        "n": 115,
+        "mean_p": 0.9438682018577573,
+        "exact": 1.0
+      }
+    ],
+    "heldout_dw2_7_tests": 1316,
+    "ece_dw2_7": 0.24999645189645472,
+    "reliability_dw2_7": [
+      {
+        "n": 132,
+        "mean_p": 0.08072857964871409,
+        "exact": 0.4090909090909091
+      },
+      {
+        "n": 132,
+        "mean_p": 0.1945005938882417,
+        "exact": 0.5
+      },
+      {
+        "n": 132,
+        "mean_p": 0.2992996479899519,
+        "exact": 0.6212121212121212
+      },
+      {
+        "n": 132,
+        "mean_p": 0.3914608443720837,
+        "exact": 0.6590909090909091
+      },
+      {
+        "n": 132,
+        "mean_p": 0.4777939769065406,
+        "exact": 0.7424242424242424
+      },
+      {
+        "n": 132,
+        "mean_p": 0.5621259199871589,
+        "exact": 0.8787878787878788
+      },
+      {
+        "n": 131,
+        "mean_p": 0.63734044705594,
+        "exact": 0.8473282442748091
+      },
+      {
+        "n": 131,
+        "mean_p": 0.7139710768385203,
+        "exact": 0.9312977099236641
+      },
+      {
+        "n": 131,
+        "mean_p": 0.7817368054183673,
+        "exact": 0.9465648854961832
+      },
+      {
+        "n": 131,
+        "mean_p": 0.8533990524858778,
+        "exact": 0.9541984732824428
+      }
+    ]
+  },
+  "single_feature_heldout_auc": {
+    "log_s_ray (+square)": 0.900474940632421,
+    "nbr_agree": 0.9711598550181227,
+    "log_support": 0.984397783610382,
+    "edge": 0.986376702912136,
+    "oblique": 0.9468816397950256,
+    "log_r": 0.9362038078573511
+  },
+  "short_steps": {
+    "heldout_step_rows": 1474,
+    "base_error": 0.3968792401628223,
+    "short_rows": 39,
+    "short_error": 0.4871794871794872
+  },
+  "tau": 0.795,
+  "generated": {
+    "chains": 1615287,
+    "points": 6352598,
+    "crossings_in": 22706484,
+    "chain_confidence_pct": [
+      0.3277,
+      0.579,
+      0.7116,
+      0.813,
+      0.8718
+    ]
+  },
+  "generated_heldout": {
+    "tests": 1055,
+    "exact": 0.8985781990521327,
+    "within_1": 0.9800947867298578,
+    "sign_errors": 0.008530805687203791,
+    "mean_abs_error": 0.12701421800947868,
+    "by_true_dw": {
+      "1-1": {
+        "tests": 547,
+        "exact": 0.9049360146252285,
+        "within_1": 0.9744058500914077
+      },
+      "2-3": {
+        "tests": 390,
+        "exact": 0.9025641025641026,
+        "within_1": 0.9846153846153847
+      },
+      "4-7": {
+        "tests": 117,
+        "exact": 0.8632478632478633,
+        "within_1": 0.9914529914529915
+      },
+      ">=8": {
+        "tests": 1,
+        "exact": 0.0,
+        "within_1": 1.0
+      }
+    },
+    "human_pairs": 9142,
+    "human_pairs_covered": 0.06628746444979217,
+    "human_adjacent_pairs": 974,
+    "human_adjacent_covered": 0.3049281314168378,
+    "matched_clicks": 666,
+    "clicks": 1101,
+    "adjacent_exact": 0.9049360146252285,
+    "adjacent_tests": 547,
+    "adjacent_outcome": {
+      "pairs": 974,
+      "covered": 0.3049281314168378,
+      "f_ok": 0.26591375770020537,
+      "f_bad": 0.039014373716632446
+    }
+  },
+  "raw_heldout": {
+    "tests": 2489,
+    "exact": 0.7573322619525914,
+    "within_1": 0.9312977099236641,
+    "sign_errors": 0.012053033346725592,
+    "mean_abs_error": 0.3611892326235436,
+    "by_true_dw": {
+      "1-1": {
+        "tests": 1159,
+        "exact": 0.7670405522001725,
+        "within_1": 0.9456427955133736
+      },
+      "2-3": {
+        "tests": 943,
+        "exact": 0.7317073170731707,
+        "within_1": 0.9088016967126193
+      },
+      "4-7": {
+        "tests": 373,
+        "exact": 0.7908847184986595,
+        "within_1": 0.9463806970509383
+      },
+      ">=8": {
+        "tests": 14,
+        "exact": 0.7857142857142857,
+        "within_1": 0.8571428571428571
+      }
+    },
+    "human_pairs": 9142,
+    "human_pairs_covered": 0.13793480638809888,
+    "human_adjacent_pairs": 974,
+    "human_adjacent_covered": 0.5225872689938398,
+    "matched_clicks": 886,
+    "clicks": 1101,
+    "adjacent_exact": 0.7670405522001725,
+    "adjacent_tests": 1159,
+    "adjacent_outcome": {
+      "pairs": 974,
+      "covered": 0.5225872689938398,
+      "f_ok": 0.3942505133470226,
+      "f_bad": 0.12833675564681724
+    }
+  },
+  "generated_train_even": {
+    "tests": 1134,
+    "exact": 0.9206349206349206,
+    "human_pairs_covered": 0.09260558439736215,
+    "human_adjacent_covered": 0.3164021164021164
+  },
+  "net_hours_saved": {
+    "fix_1x": {
+      "generated": [
+        0.794,
+        1.588
+      ],
+      "raw": [
+        0.931,
+        1.861
+      ]
+    },
+    "fix_3x": {
+      "generated": [
+        0.521,
+        1.042
+      ],
+      "raw": [
+        0.032,
+        0.065
+      ]
+    },
+    "fix_5x": {
+      "generated": [
+        0.248,
+        0.496
+      ],
+      "raw": [
+        -0.866,
+        -1.732
+      ]
+    }
+  },
+  "spatial_transfer": {
+    "z_split": 11432.212890625,
+    "train_low_test_high": {
+      "tau": 0.775,
+      "test_adjacent": 1151,
+      "kept": 394,
+      "kept_exact": 0.9213197969543148,
+      "raw_exact": 0.7741094700260643
+    },
+    "train_high_test_low": {
+      "tau": 0.785,
+      "test_adjacent": 1208,
+      "kept": 215,
+      "kept_exact": 0.9767441860465116,
+      "raw_exact": 0.8352649006622517
+    }
+  },
+  "thinned_file": {
+    "path": "confident_windings_every50.json",
+    "bytes": 20958014,
+    "chains": 32462,
+    "points": 128025,
+    "windingcheck_points": 128025,
+    "villa_collections": null,
+    "villa_points": null,
+    "villa_stderr_tail": " \"<string>\", line 1, in <module>\n    import sys, json; sys.path.insert(0, sys.argv[1]);from point_collection import load_point_collection as L;c = L(sys.argv[2]); print(json.dumps([len(c), sum(len(v['points']) for v in c.values())]))\n                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nModuleNotFoundError: No module named 'point_collection'\n"
+  },
+  "predictions": {
+    "short steps (< 0.6 x ray median) wrong at >= 3x base rate": false,
+    "nbr_agree strongest single feature": false
+  },
+  "criteria": {
+    "discrimination": {
+      "pass": true,
+      "measured": 0.8754947298254385
+    },
+    "calibration": {
+      "pass": false,
+      "measured": {
+        "ece_adjacent": 0.08704699253599293,
+        "ece_dw2_7": 0.24999645189645472
+      }
+    },
+    "precision": {
+      "pass": false,
+      "measured": {
+        "adjacent_exact": 0.9049360146252285,
+        "exact": 0.8985781990521327
+      }
+    },
+    "coverage": {
+      "pass": false,
+      "measured": {
+        "pairs_covered": 0.06628746444979217,
+        "adjacent_covered": 0.3049281314168378
+      }
+    },
+    "net_human_time": {
+      "pass": true,
+      "measured": {
+        "generated": [
+          0.521,
+          1.042
+        ],
+        "raw": [
+          0.032,
+          0.065
+        ]
+      }
+    },
+    "spatial_transfer": {
+      "pass": true,
+      "measured": {
+        "train_low_test_high": 0.9213197969543148,
+        "train_high_test_low": 0.9767441860465116
+      }
+    },
+    "cost": {
+      "pass": true,
+      "measured": {
+        "seconds_features": 269.1,
+        "seconds_generate": 6.5,
+        "peak_rss_gb": 6.81
+      }
+    },
+    "loads_in_tools": {
+      "pass": false,
+      "measured": {
+        "written": 128025,
+        "villa": null,
+        "windingcheck": 128025
+      }
+    }
+  },
+  "seconds_total": 301.5,
+  "thinned_file_recheck_after_path_fix": {
+    "note": "run.py looked for external/villa inside the git worktree, where external/ does not exist, so villa's loader never ran (ModuleNotFoundError). Path fixed in run.py; the same file re-loaded with villa's spiral-fitting/point_collection.load_point_collection on 2026-10-12.",
+    "villa_collections": 32462,
+    "villa_points": 128025,
+    "written_points": 128025,
+    "pass": true
+  }
+}

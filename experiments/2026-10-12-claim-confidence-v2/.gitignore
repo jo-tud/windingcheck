@@ -1,0 +1,4 @@
+confident_windings*.json
+__pycache__/
+*.npz
+claim_windings*.json

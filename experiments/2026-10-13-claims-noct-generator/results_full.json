@@ -1,0 +1,112 @@
+{
+  "commit": "7ae2656",
+  "pytest": "..........                                                               [100%]\n10 passed in 1.71s",
+  "full": {
+    "out": "claims_full.json",
+    "tau": 0.74,
+    "chains": 8268376,
+    "points": 20064412,
+    "crossings_in": 22706484,
+    "seconds": 861.8,
+    "wall_s": 862.6,
+    "peak_rss_gb": 8.95,
+    "cpu_percent": 107,
+    "bytes": 3996188872
+  },
+  "every50": {
+    "out": "claims_every50.json",
+    "tau": 0.74,
+    "chains": 165568,
+    "points": 402054,
+    "crossings_in": 22706484,
+    "seconds": 486.4,
+    "wall_s": 486.9,
+    "peak_rss_gb": 7.01,
+    "cpu_percent": 122,
+    "bytes": 79104473
+  },
+  "full_heldout": {
+    "tests": 1060,
+    "exact": 0.9169811320754717,
+    "within_1": 0.9858490566037735,
+    "sign_errors": 0.011320754716981131,
+    "mean_abs_error": 0.1009433962264151,
+    "by_true_dw": {
+      "1-1": {
+        "tests": 721,
+        "exact": 0.9140083217753121,
+        "within_1": 0.9819694868238558
+      },
+      "2-3": {
+        "tests": 311,
+        "exact": 0.9228295819935691,
+        "within_1": 0.9935691318327974
+      },
+      "4-7": {
+        "tests": 28,
+        "exact": 0.9285714285714286,
+        "within_1": 1.0
+      }
+    },
+    "human_pairs": 9142,
+    "human_pairs_covered": 0.06683439072413039,
+    "human_adjacent_pairs": 974,
+    "human_adjacent_covered": 0.3993839835728953,
+    "matched_clicks": 878,
+    "clicks": 1101,
+    "adjacent_exact": 0.9140083217753121,
+    "adjacent_tests": 721,
+    "adjacent_outcome": {
+      "pairs": 974,
+      "covered": 0.3993839835728953,
+      "f_ok": 0.351129363449692,
+      "f_bad": 0.048254620123203286
+    }
+  },
+  "criteria": {
+    "full_volume_on_cpu": {
+      "pass": true,
+      "measured": {
+        "out": "claims_full.json",
+        "tau": 0.74,
+        "chains": 8268376,
+        "points": 20064412,
+        "crossings_in": 22706484,
+        "seconds": 861.8,
+        "wall_s": 862.6,
+        "peak_rss_gb": 8.95,
+        "cpu_percent": 107,
+        "bytes": 3996188872
+      }
+    },
+    "full_equals_region": {
+      "pass": true,
+      "measured": {
+        "full": {
+          "tests": 1060,
+          "exact_count": 972,
+          "points": 20064412
+        },
+        "region": {
+          "tests": 1060,
+          "exact_count": 972
+        }
+      }
+    },
+    "loads_in_tools": {
+      "pass": true,
+      "measured": {
+        "points_written": 402054,
+        "windingcheck_points": 402054,
+        "villa_collections": 165568,
+        "villa_points": 402054,
+        "villa_python": "external/villa/vesuvius/.venv/bin/python",
+        "villa_stderr_tail": ""
+      }
+    },
+    "clean_checkout": {
+      "pass": true,
+      "measured": "..........                                                               [100%]\n10 passed in 1.71s"
+    }
+  }
+}

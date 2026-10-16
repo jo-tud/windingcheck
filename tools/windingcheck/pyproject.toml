@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "windingcheck"
+version = "0.1.0"
+description = "Score automatic winding constraints (VC3D point collections, neural ray crossings, spiral priors) against human winding annotations."
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+authors = [{ name = "Johannes Pfeffer (jo-tud)" }]
+# Ranges here; the exact tested versions are in constraints.txt.
+dependencies = [
+    "numpy>=2.0,<3",
+    "scipy>=1.13,<2",
+]
+
+[project.optional-dependencies]
+plot = ["matplotlib>=3.8,<4"]
+tests = ["pytest>=8,<10"]
+
+[project.scripts]
+windingcheck = "windingcheck.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+windingcheck = ["models/*.json"]

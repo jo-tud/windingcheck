@@ -1,0 +1,57 @@
+{
+ "relative_windings.json": {
+  "collections": 300,
+  "points": 2173,
+  "first_day": "2026-06-16",
+  "last_day": "2026-06-19",
+  "active_hours": {
+   "cap_120s": 3.48,
+   "cap_300s": 6.04,
+   "cap_600s": 6.95
+  },
+  "chains_with_windings": 254,
+  "median_span_windings": 5.0,
+  "max_span_windings": 51.0,
+  "implied_pairwise_constraints": 16269,
+  "adjacent_wrap_spacing_vox": {
+   "p10": 12.0,
+   "median": 21.2,
+   "p90": 40.4
+  }
+ },
+ "same_windings.json": {
+  "collections": 154,
+  "points": 5413,
+  "first_day": "2026-06-09",
+  "last_day": "2026-06-17",
+  "active_hours": {
+   "cap_120s": 0.48,
+   "cap_300s": 0.59,
+   "cap_600s": 0.59
+  }
+ },
+ "abs_winding.json": {
+  "collections": 6,
+  "points": 59,
+  "first_day": "2026-06-12",
+  "last_day": "2026-06-17",
+  "active_hours": {
+   "cap_120s": 0.04,
+   "cap_300s": 0.04,
+   "cap_600s": 0.04
+  }
+ },
+ "total": {
+  "points": 7645,
+  "active_hours": {
+   "cap_120s": 4.0,
+   "cap_300s": 6.67,
+   "cap_600s": 7.71
+  }
+ },
+ "seconds_per_relative_point": {
+  "cap_120s": 5.8,
+  "cap_300s": 10.0,
+  "cap_600s": 11.5
+ }
+}

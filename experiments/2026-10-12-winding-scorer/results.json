@@ -1,0 +1,315 @@
+{
+  "truth": {
+    "chains": 254,
+    "clicks": 2173,
+    "pairs": 16269,
+    "adjacent_pairs": 1919,
+    "tol_n_median": 4.0,
+    "clicks_without_normal": 0
+  },
+  "self_score": {
+    "tests": 16269,
+    "exact": 1.0,
+    "within_1": 1.0,
+    "sign_errors": 0.0,
+    "mean_abs_error": 0.0,
+    "by_true_dw": {
+      "1-1": {
+        "tests": 1919,
+        "exact": 1.0,
+        "within_1": 1.0
+      },
+      "2-3": {
+        "tests": 3084,
+        "exact": 1.0,
+        "within_1": 1.0
+      },
+      "4-7": {
+        "tests": 3921,
+        "exact": 1.0,
+        "within_1": 1.0
+      },
+      ">=8": {
+        "tests": 7345,
+        "exact": 1.0,
+        "within_1": 1.0
+      }
+    },
+    "human_pairs": 16269,
+    "human_pairs_covered": 1.0,
+    "human_adjacent_pairs": 1919,
+    "human_adjacent_covered": 1.0,
+    "matched_clicks": 2173,
+    "clicks": 2173
+  },
+  "shuffled_control": {
+    "tests": 16269,
+    "exact": 0.03872395353125576,
+    "within_1": 0.10695187165775401,
+    "sign_errors": 0.5032884627205114,
+    "mean_abs_error": 13.46806810498494,
+    "by_true_dw": {
+      "1-1": {
+        "tests": 1919,
+        "exact": 0.10422094841063054,
+        "within_1": 0.18759770713913496
+      },
+      "2-3": {
+        "tests": 3084,
+        "exact": 0.060635538261997406,
+        "within_1": 0.19649805447470817
+      },
+      "4-7": {
+        "tests": 3921,
+        "exact": 0.03187962254526906,
+        "within_1": 0.11425656720224432
+      },
+      ">=8": {
+        "tests": 7345,
+        "exact": 0.016065350578624914,
+        "within_1": 0.04438393464942138
+      }
+    },
+    "human_pairs": 16269,
+    "human_pairs_covered": 1.0,
+    "human_adjacent_pairs": 1919,
+    "human_adjacent_covered": 1.0,
+    "matched_clicks": 2173,
+    "clicks": 2173,
+    "adjacent_exact": 0.10422094841063054,
+    "adjacent_tests": 1919
+  },
+  "missed_sheet_control": {
+    "tests": 16269,
+    "exact": 0.4812219558669863,
+    "within_1": 1.0,
+    "sign_errors": 0.0,
+    "mean_abs_error": 0.5187780441330138,
+    "by_true_dw": {
+      "1-1": {
+        "tests": 1919,
+        "exact": 0.8947368421052632,
+        "within_1": 1.0
+      },
+      "2-3": {
+        "tests": 3084,
+        "exact": 0.7146562905317769,
+        "within_1": 1.0
+      },
+      "4-7": {
+        "tests": 3921,
+        "exact": 0.5144095893904617,
+        "within_1": 1.0
+      },
+      ">=8": {
+        "tests": 7345,
+        "exact": 0.25745405037440433,
+        "within_1": 1.0
+      }
+    },
+    "human_pairs": 16269,
+    "human_pairs_covered": 1.0,
+    "human_adjacent_pairs": 1919,
+    "human_adjacent_covered": 1.0,
+    "matched_clicks": 2173,
+    "clicks": 2173,
+    "expected_exact": 0.48122195586698624
+  },
+  "human_loop_consistency": {
+    "groups": 13,
+    "groups_multi_valued": 0,
+    "loops": 0,
+    "loops_consistent": null,
+    "holonomy_hist": {}
+  },
+  "prior_global": {
+    "tests": 9142,
+    "exact": 0.19120542550864145,
+    "within_1": 0.38634872019251804,
+    "sign_errors": 0.0,
+    "mean_abs_error": 4.652920586304966,
+    "by_true_dw": {
+      "1-1": {
+        "tests": 974,
+        "exact": 0.6406570841889117,
+        "within_1": 0.9383983572895277
+      },
+      "2-3": {
+        "tests": 1571,
+        "exact": 0.3711012094207511,
+        "within_1": 0.7294716740929345
+      },
+      "4-7": {
+        "tests": 2052,
+        "exact": 0.16666666666666666,
+        "within_1": 0.43323586744639375
+      },
+      ">=8": {
+        "tests": 4545,
+        "exact": 0.04378437843784379,
+        "within_1": 0.12827282728272826
+      }
+    },
+    "prior": {
+      "r_knots": [
+        0.0,
+        1.0
+      ],
+      "s_knots": [
+        17.811,
+        17.811
+      ],
+      "direction": -1
+    },
+    "adjacent_exact": 0.6406570841889117,
+    "adjacent_tests": 974
+  },
+  "prior_radius_binned": {
+    "tests": 9142,
+    "exact": 0.1891271056661562,
+    "within_1": 0.40056880332531175,
+    "sign_errors": 0.0,
+    "mean_abs_error": 3.651717348501422,
+    "by_true_dw": {
+      "1-1": {
+        "tests": 974,
+        "exact": 0.6386036960985626,
+        "within_1": 0.946611909650924
+      },
+      "2-3": {
+        "tests": 1571,
+        "exact": 0.3526416295353278,
+        "within_1": 0.7568427753023552
+      },
+      "4-7": {
+        "tests": 2052,
+        "exact": 0.1642300194931774,
+        "within_1": 0.4546783625730994
+      },
+      ">=8": {
+        "tests": 4545,
+        "exact": 0.047524752475247525,
+        "within_1": 0.13597359735973596
+      }
+    },
+    "prior": {
+      "r_knots": [
+        293.07,
+        448.24,
+        575.09,
+        744.98,
+        883.61,
+        1115.11,
+        1339.29,
+        1551.33,
+        1739.33,
+        1947.71
+      ],
+      "s_knots": [
+        13.774,
+        16.056,
+        19.941,
+        16.795,
+        26.23,
+        18.614,
+        19.274,
+        18.786,
+        15.494,
+        16.472
+      ],
+      "direction": 1
+    },
+    "adjacent_exact": 0.6386036960985626,
+    "adjacent_tests": 974
+  },
+  "neural_crossings": {
+    "tests": 5298,
+    "exact": 0.7576443941109853,
+    "within_1": 0.9382785956964892,
+    "sign_errors": 0.01812004530011325,
+    "mean_abs_error": 0.3884484711211778,
+    "by_true_dw": {
+      "1-1": {
+        "tests": 2359,
+        "exact": 0.8054260279779568,
+        "within_1": 0.9554896142433235
+      },
+      "2-3": {
+        "tests": 2033,
+        "exact": 0.7255287752090507,
+        "within_1": 0.9286768322675848
+      },
+      "4-7": {
+        "tests": 853,
+        "exact": 0.7092614302461899,
+        "within_1": 0.9249706916764361
+      },
+      ">=8": {
+        "tests": 53,
+        "exact": 0.6415094339622641,
+        "within_1": 0.7547169811320755
+      }
+    },
+    "human_pairs": 16269,
+    "human_pairs_covered": 0.16343967053906203,
+    "human_adjacent_pairs": 1919,
+    "human_adjacent_covered": 0.5330901511203752,
+    "matched_clicks": 1762,
+    "clicks": 2173,
+    "crossings": 22706484,
+    "rays": 1147551,
+    "seconds_load": 1.8,
+    "seconds_total": 9.4,
+    "adjacent_exact": 0.8054260279779568,
+    "adjacent_tests": 2359
+  },
+  "crossings_vs_prior_same_pairs_dw_ge_4": {
+    "crossings_tests": 387,
+    "crossings_exact": 0.7906976744186046,
+    "prior_pairs": 245,
+    "prior_exact": 0.2979591836734694
+  },
+  "predictions": {
+    "global prior exact < 50% on all pairs": true,
+    "global prior exact >= 70% on adjacent pairs": false,
+    "radius-binned prior better than global prior on all pairs": false,
+    "crossings cover < 50% of human pairs": true,
+    "crossings exact > global prior for |dw| >= 4 (same pairs)": true
+  },
+  "criteria": {
+    "self_score": {
+      "pass": true,
+      "measured": {
+        "exact": 1.0,
+        "covered": 1.0
+      }
+    },
+    "shuffled_control": {
+      "pass": true,
+      "measured": {
+        "adjacent_exact": 0.10422094841063054
+      }
+    },
+    "missed_sheet_control": {
+      "pass": true,
+      "measured": {
+        "exact": 0.4812219558669863,
+        "expected": 0.48122195586698624,
+        "sign_errors": 0.0
+      }
+    },
+    "human_loop_consistency": {
+      "pass": null,
+      "measured": "not testable",
+      "loops": 0
+    },
+    "cost": {
+      "pass": true,
+      "measured": {
+        "seconds": 9.4,
+        "peak_rss_gb": 2.84
+      }
+    }
+  },
+  "seconds_total": 9.6
+}
