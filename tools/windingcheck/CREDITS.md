@@ -15,9 +15,12 @@ not exist without them.
   the **Vesuvius Challenge team** with the same dataset. The manifest records the villa
   `neural_tracing` winding model (`winding_model_3d_large_11`) and villa's
   `export_spiral_supervision` export (2026-08).
-- **CT scans of PHerc. Paris 4**: EduceLab-Scrolls Dataset, © EduceLab / The University of
-  Kentucky (Parsons, Parker, Chapman, Hayashida & Seales, 2023). The crossings and annotations
-  above were made on these scans. See `DATA_NOTICE.md` for the required citation.
+- **CT scans of PHerc. Paris 4**: the annotations and crossings above sit in the frame of the
+  2026 Paris 4 scan `20260411134726` (2.4 µm; the crossings' manifest names its 2× downsampled
+  copy), released by the Vesuvius Challenge (Angelotti et al., *Vesuvius Challenge – CT Scans of
+  Herculaneum Papyri*, 2026). PHerc. Paris 4 is also part of the EduceLab-Scrolls Dataset,
+  © EduceLab / The University of Kentucky (Parsons, Parker, Chapman, Hayashida & Seales, 2023).
+  See `DATA_NOTICE.md` for both citations.
 
 ## Formats and tools
 

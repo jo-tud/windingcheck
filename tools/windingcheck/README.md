@@ -15,7 +15,7 @@ Needs Python 3.12 or newer with `venv` (tested on 3.12, Linux x86_64) and `git`.
 download over one connection, no GPU. The download took 73 s on one run and 4.7 min on another;
 it depends on your line.
 
-    git clone <this repository> && cd <repository>
+    git clone https://github.com/jo-tud/windingcheck && cd windingcheck
     python3 -m venv .venv && . .venv/bin/activate
     pip install -e "tools/windingcheck[plot]" -c tools/windingcheck/constraints.txt
 
@@ -164,7 +164,7 @@ scored their outputs with `windingcheck`, nor mine with their benchmark.
 | Project | Author | What it does | Headline, as its authors report it |
 |---|---|---|---|
 | [winding-ruler](https://github.com/pscamillo/winding-ruler) | pscamillo | Measures winding evidence for villa's spiral fit: where human annotations matter, why generators fail | A calibrated estimator recovers human relative-winding labels at 93% on adjacent (Δw = 1) pairs of Paris 4, "yet three progressively better constraint generators all degrade the fit" |
-| [winding-sync](https://github.com/abundantjoe/winding-sync) | Joseph Balmaceda | Relative winding constraints from raw CT (structure-tensor lamina counting), reconciled by L1 integer synchronisation | Per probe ~38% exact, ~90% within one winding; stays ≥ 95% accurate up to 15% injected gross error (synthetic); absolute counts not calibrated |
+| [winding-sync](https://github.com/abundantjoe/winding-sync) | Joseph Balmaceda | Relative winding constraints from raw CT (structure-tensor lamina counting), reconciled by L1 integer synchronisation | Per probe ~38% exact, ~90% within one winding; stays ≥ 95% accurate up to 10% injected gross error (93.9% at 15%, synthetic); absolute counts not calibrated |
 | [constraint-gauge](https://github.com/pscamillo/constraint-gauge) | pscamillo | Benchmark that scores any winding-constraint generator against Paris 4 human annotations (8,156 within-collection pairs, Δw 1–6) and against nine human-verified meshes, with criteria fixed before measurement | Exact agreement on Δw = 1 pairs, mean absolute residual, confidence calibration, coverage; winding-sync scores 0.050 exact against verified meshes on one slice, where its own metric says 0.670. All three figures: constraint-gauge `README.md` at commit `a72c423` ("How ground truth is built", "Internal agreement is not external accuracy") |
 
 How mine differs. My `adjacent_exact` is also exact agreement on Δw = 1, but counted per *test*
@@ -176,13 +176,13 @@ meant a better spiral fit.
 
 ## Limits
 
-- **No spiral-fit gain.** I fitted villa's `fit_spiral.py` four times on PHerc. Paris 4,
-  z 8400-9400 (12,000 steps each): no constraints, `generate --claims`, a random cut at equal
-  steps, and the raw crossings. On the 21 held-out odd chains the claims fit scored 6.9 % slips
-  per wrap against 6.1 % without constraints (paired difference +2.1 points, 95 % CI -4.7 to
-  +9.4): no gain. The raw crossings scored best (3.4 %). This repeats winding-ruler's finding that
-  a more precise constraint set is not a better fit input. Treat `generate --claims` as a filter
-  with a measured precision, not as a fit improvement.
+- **No spiral-fit gain seen; the test was underpowered.** I fitted villa's `fit_spiral.py` on
+  one slab of PHerc. Paris 4 (z 8400-9400) with and without the `generate --claims` constraints
+  and saw no gain. The test is inconclusive: one seed per fit, 21 held-out chains, too few to
+  show a gain or a loss of the size that matters. Its fit files and the commands that built the
+  control arms are not in this repository. A later, larger test of the raw crossings on another
+  slab made the fit slip more, not less, though its no-constraint fit had not fully converged.
+  Treat `generate --claims` as a filter with a measured precision, not as a fit improvement.
 - **The held-out chains were not fully held out.** The model's coefficients and τ were fitted on
   the even chains only. But I looked at the odd (held-out) chains in a follow-up analysis of v1
   (`experiments/2026-10-12-confident-crossings/posthoc.py`) that led to the v2 claim-level design,
@@ -193,10 +193,13 @@ meant a better spiral fit.
   --claims` count the sheets the wrong way round: the chain runs against the human winding
   direction, because `wind_a` follows the ray's order. A spiral fitter would read these as
   reversed constraints. v0.1 does not fix this.
-- **Unknown training set of the crossing model.** The crossings come from villa's
-  `winding_model_3d_large_11`. I do not know what it was trained on. If Paris 4's human windings
-  were in its training data, the raw 76.7% baseline, and everything built on the crossings, is
-  in-sample for that model, and a new scroll will score lower.
+- **The crossing model's training set is unknown, and Paris 4 is probably in it.** The crossings
+  come from villa's `winding_model_3d_large_11`. I do not know exactly what it was trained on, but
+  the crossings' own `manifest.json` points that way: `source_attributes.reference_zarr` lies
+  under a folder named `winding_train_data/PHercParis4/`, and `source_attributes.fit_checkpoint`
+  is a Paris 4 spiral fit dated 2026-07-27, which set the rays. So the raw 76.7% baseline, and
+  everything built on the crossings, is probably in-sample for that model, and a new scroll will
+  likely score lower.
 - **One scroll.** Only PHerc. Paris 4 has both public ray crossings and public human winding
   labels, so every accuracy number here is from that one scroll. The model was fitted on Paris 4
   (even chains). On any other scroll it is untested.
@@ -211,9 +214,9 @@ meant a better spiral fit.
 - **Not calibrated.** The `confidence` tag ranks chains; it is not a probability.
 - **60% of adjacent pairs are not covered.** Those still need a human or another source.
 - **Are the human chains right where the generator counts an extra sheet?** I tried to settle
-  this by eye on 60 CT crops (4.8 µm, one axial slice each). It did not work: on the 20 control
-  crops, where ray and human agree, I read "no sheet in between" on only 12, and 26 of the 60
-  crops were unreadable. So there is no answer yet.
+  this by eye on CT crops (4.8 µm, one axial slice each). It did not work: I could not read the
+  control crops, where ray and human agree, reliably enough, so there is no answer yet. The
+  crops and my notes are not published.
 - The full-volume output is 4.0 GB. Use `--every N` for VC3D.
 - `windingcheck.ct` (CT sampling for the research version) is not used by any command and needs
   the separate `inkcheck` package.

@@ -14,9 +14,11 @@ spiral fitting.
 
 ![where the organisers' crossings and two spiral priors disagree with the human chains](experiments/2026-10-12-winding-scorer/drift_map.png)
 
-*Every adjacent pair of human clicks on Paris 4: grey where a method counts the sheets right, red
+*Adjacent pairs of human clicks on Paris 4: grey where a method counts the sheets right, red
 where it counts too many, blue too few. Left to right: a spiral prior with one sheet spacing,
-the same prior with spacing by radius, the organisers' neural crossings.*
+the same prior with spacing by radius, the organisers' neural crossings. The two prior panels
+show the held-out (odd) chains only; the crossings panel shows all chains, so it reads 81% here
+against 76.7% held out.*
 
 ## What came out
 
@@ -44,9 +46,11 @@ matching works are in [`tools/windingcheck/README.md`](tools/windingcheck/README
 
 ## What does not work yet
 
-- **No better spiral fit.** I fitted villa's `fit_spiral.py` on a slab of Paris 4 with and
-  without the generated constraints: no gain (6.9% slips per wrap against 6.1% without). More
-  precise constraints are not, so far, a better fit input, as winding-ruler also found.
+- **No spiral-fit gain seen.** I fitted villa's `fit_spiral.py` on one slab of Paris 4 with and
+  without the generated constraints and saw no gain. That test was too small to decide either
+  way (one slab, 21 held-out chains, one fit per setting); its fit files are not in this
+  repository. Treat `generate --claims` as a filter with a measured precision, not as a fit
+  improvement.
 - **One scroll.** Paris 4 is the only scroll with both public ray crossings and human winding
   labels, so every number here comes from it.
 - **60% of adjacent pairs are not covered**, and the confidence ranks chains but is not a
@@ -65,12 +69,19 @@ The tool README lists the other limits.
 
 Code: MIT, see `LICENSE`.
 
-The scan data this code reads is published by the Vesuvius Challenge and EduceLab under
-CC BY-NC 4.0 and is not redistributed here. Cite the scans as:
+The data this code reads (human annotations and ray crossings of PHerc. Paris 4) is published by
+the Vesuvius Challenge under CC BY-NC 4.0 and is not redistributed here. The annotations and
+crossings sit in the frame of the 2026 Paris 4 scan `20260411134726` (2.4 µm). Cite both datasets:
 
 > S. Parsons, C. S. Parker, C. Chapman, M. Hayashida, W. B. Seales,
 > *EduceLab-Scrolls: Verifiable Recovery of Text from Herculaneum Papyri using
 > X-ray CT*, arXiv:2304.02084, 2023.
 
-See <https://scrollprize.org/data> for the data agreement. PHerc. Paris 4 material is under a
-publication reservation and is not included.
+> G. Angelotti, S. Parsons, S. Johnson, E. R. Dal Prà, J. Rudolph, P. Tafforeau, A. Mirone,
+> P. Henderson, H. Schilling, F. McDonald, D. Josey, Y. Nader, C. S. Parker, W. B. Seales,
+> *Vesuvius Challenge – CT Scans of Herculaneum Papyri*, Vesuvius Challenge, 2026.
+
+See <https://scrollprize.org/data> for the data agreement. **PHerc. Paris 4 text is reserved**
+until its title prize is announced (open until 2027-06-25). This repository ships no scan data,
+and nothing `windingcheck` writes can carry text: its outputs and figures are coordinates,
+counts and scores only. See `tools/windingcheck/DATA_NOTICE.md`.
