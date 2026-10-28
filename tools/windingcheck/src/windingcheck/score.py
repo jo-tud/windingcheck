@@ -60,7 +60,18 @@ class Truth:
         return np.concatenate(ii), np.concatenate(jj)
 
 
-def build_truth(chains: Chains, *, tol_t=25.0, tol_frac=0.35, tol_min=1.5, tol_max=4.0) -> Truth:
+def build_truth(chains: Chains, *, tol_t=25.0, tol_frac=0.35, tol_min=1.5, tol_max=4.0,
+                normals=None) -> Truth:
+    """Truth from human chains. The match normal of a click is the human chain direction, unless
+    ``normals`` gives one per click (rows in the order of ``chains``, e.g. a CT structure-tensor
+    sheet normal); a nan row keeps the chain direction. Spacing and ``tol_n`` follow the normal used.
+
+    On a sheet tilted against the chain the chain direction is not the sheet normal, and a point of
+    the neighbouring sheet can pass ``tol_n`` inside ``tol_t``: on synthetic spiral sheets with every
+    claim correct the chain-direction match reads 0.50 adjacent exact at 30-45 deg tilt (pitch 12 vx),
+    a CT normal 1.00. The default (``normals=None``) is unchanged.
+    """
+    order = np.lexsort((chains.level, chains.chain))
     ch = chains.sorted()
     n = len(ch)
     normal = np.full((n, 3), np.nan)
@@ -76,6 +87,12 @@ def build_truth(chains: Chains, *, tol_t=25.0, tol_frac=0.35, tol_min=1.5, tol_m
         nxt = np.r_[p[1:] - p[:-1], [p[-1] - p[-2]]]
         d = prev + nxt
         d /= np.linalg.norm(d, axis=1, keepdims=True) + 1e-12
+        if normals is not None:
+            g = np.asarray(normals, np.float64)[order[s:e]]
+            ok = np.isfinite(g).all(1)
+            g = g[ok] / (np.linalg.norm(g[ok], axis=1, keepdims=True) + 1e-12)
+            sgn = np.sign(np.einsum("ij,ij->i", g, d[ok]))
+            d[ok] = g * np.where(sgn == 0, 1.0, sgn)[:, None]
         normal[s:e] = d
         gap_prev = np.abs(np.einsum("ij,ij->i", prev, d))
         gap_next = np.abs(np.einsum("ij,ij->i", nxt, d))
@@ -101,11 +118,11 @@ def match(truth: Truth, cand: Chains):
     tree = cKDTree(cand.xyz)
     radius = np.sqrt(truth.tol_t ** 2 + truth.tol_n[tidx] ** 2)
     hits = tree.query_ball_point(truth.chains.xyz[tidx], radius)
-    n_hits = np.fromiter((len(h) for h in hits), np.int64, len(hits))
-    if n_hits.sum() == 0:
+    lens = np.fromiter((len(h) for h in hits), np.int64, len(hits))
+    if lens.sum() == 0:
         return np.empty(0, np.int64), np.empty(0, np.int64), np.empty(0)
-    ti = np.repeat(tidx, n_hits)
-    cj = np.fromiter((j for h in hits for j in h), np.int64, int(n_hits.sum()))
+    ti = np.repeat(tidx, lens)
+    cj = np.fromiter((j for h in hits for j in h), np.int64, int(lens.sum()))
     d = cand.xyz[cj] - truth.chains.xyz[ti]
     dn = np.abs(np.einsum("ij,ij->i", d, truth.normal[ti]))
     dt = np.sqrt(np.maximum((d * d).sum(1) - dn * dn, 0.0))
@@ -332,8 +349,8 @@ def loop_consistency(truth: Truth, same: Chains):
             common = sorted(set(link[A]) & set(link[B]))
             for x in range(len(common)):
                 for y in range(x + 1, len(common)):
-                    S, S_ = common[x], common[y]
-                    hol.append((link[A][S_] - link[A][S]) - (link[B][S_] - link[B][S]))
+                    S, S2 = common[x], common[y]
+                    hol.append((link[A][S2] - link[A][S]) - (link[B][S2] - link[B][S]))
     return {"groups": int(groups), "groups_multi_valued": int(multi),
             "loops": int(len(hol)),
             "loops_consistent": float(np.mean(np.asarray(hol) == 0)) if hol else None,

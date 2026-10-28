@@ -4,6 +4,8 @@
     windingcheck score CANDIDATE.json [--scroll PHercParis4] [--same-winding] [--plot out.png]
     windingcheck score --crossings DIR [--scroll PHercParis4] [--heldout]
     windingcheck prior [--scroll PHercParis4]
+    windingcheck normals --heldout --out normals.json      (CT sheet normal per human click, reads CT)
+    windingcheck score ... --normals normals.json          (match along the CT sheet normal)
     windingcheck generate --crossings DIR --out confident.json [--every 50] [--tau T] [--model M.json]
     windingcheck generate --claims --crossings DIR --out claims.json [--every 50]     (v2, no CT)
     windingcheck generate --claims --crossings DIR --out f.json --every 50 --score --heldout [--plot p.png]
@@ -31,7 +33,13 @@ def _truth(args):
     if getattr(args, "heldout", False):
         ids = np.arange(human.n_chains)
         human = human.subset(ids[ids % 2 == 1])
-    return d, build_truth(human, tol_t=args.tol_t)
+    nrm = None
+    if getattr(args, "normals", None):
+        from .normals import for_chains
+        nrm = for_chains(human, args.normals)
+        print(f"normals: {int(np.isfinite(nrm).all(1).sum())} of {len(nrm)} clicks have a CT normal; "
+              "the rest keep the chain direction", file=sys.stderr)
+    return d, build_truth(human, tol_t=args.tol_t, normals=nrm)
 
 
 def main(argv=None):
@@ -55,7 +63,17 @@ def main(argv=None):
                    help="two points of different chains closer than this (voxels) are one shared point")
     s.add_argument("--heldout", action="store_true",
                    help="score against the odd-numbered human chains only (the shipped models never saw them)")
+    s.add_argument("--normals", help="match along these per-click sheet normals (`windingcheck normals` output) "
+                                     "instead of the human chain direction")
     sub.add_parser("prior")
+    nm = sub.add_parser("normals", help="CT structure-tensor sheet normal at each human click (reads the CT)")
+    nm.add_argument("--out", required=True, help="JSON to write")
+    nm.add_argument("--heldout", action="store_true", help="odd-numbered human chains only (1,101 clicks)")
+    nm.add_argument("--cache", default=None,
+                    help="CT chunk cache (default: $WINDINGCHECK_CT_CACHE or data/ct_cache/PHercParis4_L2 in the clone)")
+    nm.add_argument("--z-band", nargs=2, type=float, metavar=("Z0", "Z1"), default=None,
+                    help="only clicks with Z0 <= z < Z1 get a normal (the README numbers use 7000 17000)")
+    nm.add_argument("--threads", type=int, default=8, help="parallel chunk downloads")
     g = sub.add_parser("generate", help="confidence-filtered relative chains from ray crossings")
     g.add_argument("--crossings", required=True, help="winding_inference directory")
     g.add_argument("--out", required=True, help="VC3D point-collection JSON to write")
@@ -73,11 +91,14 @@ def main(argv=None):
     g.add_argument("--join-tol", type=float, default=1e-3, help="with --score: shared-point tolerance, voxels")
     g.add_argument("--plot", help="with --score: write a drift map PNG")
     g.add_argument("--json", help="with --score: write the scores here")
+    g.add_argument("--normals", help="with --score: per-click sheet normals (`windingcheck normals` output)")
     args = p.parse_args(argv)
 
     if args.cmd == "generate":
         return _generate(args)
 
+    if args.cmd == "normals":
+        return _normals(args)
     if args.cmd == "fetch":
         print(data.fetch(args.scroll, args.data, crossings=args.crossings))
         return 0
@@ -114,6 +135,36 @@ def _score(args, cand):
         from .plot import drift_map
         drift_map(truth, {"candidate": tests}, args.plot, umb=Umbilicus(d / "umbilicus.json"))
     return res
+
+
+def _normals(args):
+    from . import normals as N
+    t0 = time.time()
+    d = data.fetch(args.scroll, args.data)
+    if args.scroll != "PHercParis4":
+        raise SystemExit("normals: only PHercParis4 has a known CT frame")
+    human = load_pcl(d / "relative_windings.json")
+    if args.heldout:
+        ids = np.arange(human.n_chains)
+        human = human.subset(ids[ids % 2 == 1])
+    ct = N.HttpU8Zarr(cache=args.cache, threads=args.threads)
+    ct.check_meta()
+    xyz = human.xyz
+    inb = np.ones(len(xyz), bool)
+    if args.z_band:
+        inb = (xyz[:, 2] >= args.z_band[0]) & (xyz[:, 2] < args.z_band[1])
+    chunks = ct.prefetch([N.click_box(p, N.HALF + 1) for p in xyz[inb]])
+    n = np.full((len(xyz), 3), np.nan)
+    coh, zs = np.full(len(xyz), np.nan), np.full(len(xyz), np.nan)
+    n[inb], coh[inb], zs[inb] = N.ct_normals(xyz[inb], ct.box)
+    meta = {"volume": N.PARIS4_L2_URL, "recipe": {"sigma_gradient": N.SIG_G, "sigma_tensor": N.SIG_I,
+            "box_half": N.HALF, "zero_share_max": N.ZERO_SHARE}, "heldout": bool(args.heldout),
+            "z_band": args.z_band}
+    N.save(args.out, xyz, n, coh, zs, meta)
+    print(json.dumps({"out": args.out, "clicks": int(len(xyz)),
+                      "with_normal": int(np.isfinite(n).all(1).sum()), "chunks": chunks,
+                      "seconds": round(time.time() - t0, 1)}))
+    return 0
 
 
 def _generate(args):

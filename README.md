@@ -2,7 +2,7 @@
 
 Score automatic winding constraints against the public human winding annotations of
 PHerc. Paris 4, and generate new relative-winding constraints from the organisers' neural ray
-crossings. CPU only, no CT read.
+crossings. CPU only; only the optional `normals` command reads CT.
 
 Relative-winding chains are the most expensive human input in the public spiral data: the
 2,173 clicks behind Paris 4's chains took 3.5–7.0 h, out of an 8 h budget for a whole scroll.
@@ -27,10 +27,17 @@ On the held-out half of the human chains (the odd-numbered ones):
 - The organisers' raw crossings are **76.7%** exact on adjacent sheet pairs, at 52.3% coverage.
 - `generate --claims` keeps the crossings it trusts and is **91.4%** exact (87.9% per human
   pair), at 39.9% coverage. Cutting the rays at random to the same coverage gives 84.2%, so the
-  model's own share of the gain is **+7.2 points** (95% CI +3.7 to +11.2).
+  gain over random cuts is **+7.2 points** (95% CI +3.7 to +11.2) with this scorer. About half of
+  that gain comes from the scorer, not the model: see the tilt limit below.
+- Matched along the sheet normal measured in the CT (`windingcheck normals`, then
+  `score --normals`, new in v0.1.2), the same held-out chains read **91.2%** raw, **97.0%** for
+  `generate --claims` (95.4% per human pair) and 93.8% for random cuts. The gain over random cuts
+  is **+3.2 points** (95% CI +1.3 to +5.6), but the generator now covers 51.6% of the adjacent
+  pairs and random cuts 49.0%, so it is no longer a gain at equal coverage. Every number re-makes
+  from this repository: `experiments/2026-10-23-windingcheck-ct-normal/`.
 - In human time that is **0.72–1.45 h saved** of the 3.5–7.0 h, if fixing a wrong constraint
-  costs three times as much as making one; about half of it comes from the model, the rest from
-  cutting at all.
+  costs three times as much as making one. With this scorer about half of it comes from where
+  the model cuts, the rest from cutting at all.
 - The whole scroll (22.7 M crossings) takes 14.4 min and 9 GB on a CPU. The output loads in
   villa's point-collection loader with the same point count.
 
@@ -48,11 +55,24 @@ matching works are in [`tools/windingcheck/README.md`](tools/windingcheck/README
 
 - **No spiral-fit gain seen.** I fitted villa's `fit_spiral.py` on one slab of Paris 4 with and
   without the generated constraints and saw no gain. That test was too small to decide either
-  way (one slab, 21 held-out chains, one fit per setting); its fit files are not in this
+  way (one slab, 21 held-out chains, one fit per setting at 12,000 steps; villa's default is
+  30,000, and its DT losses start at step 25,000, so they were off); its fit files are not in this
   repository. Treat `generate --claims` as a filter with a measured precision, not as a fit
   improvement.
 - **One scroll.** Paris 4 is the only scroll with both public ray crossings and human winding
   labels, so every number here comes from it.
+- **The default match misses tests on tilted sheets.** It matches a generated point to a human
+  click along the direction of the human chain, not along the sheet normal (on the held-out clicks
+  the median angle between the two is about 25°). On synthetic sheets where every claim is correct,
+  it reads 50% exact at 30–45° tilt. On real Paris 4 sheets with claims known to be correct it
+  reads 98.4% there and 95.5% above 45°; there its cost is mostly half as many tests, plus a wrong
+  share of 1.5% instead of 0.14%. So the numbers above do not read low by the synthetic amount.
+  When I re-score the same held-out chains along the sheet normal measured in the CT
+  (`score --normals`), every number above rises, and the model's gain over random cuts shrinks
+  from +7.2 to +3.2 points (95% CI +1.3 to +5.6), no longer at equal coverage. I checked the
+  sheet-normal match on those real claims (points ≤ 24 voxels from a click, on human-verified
+  patches): 99.9% exact, 99.6% at 30–45°, and it reads every planted ±1 slip as wrong
+  (`experiments/2026-10-23-windingcheck-real-sheets/`). Details: Limits in the tool README.
 - **60% of adjacent pairs are not covered**, and the confidence ranks chains but is not a
   probability.
 
@@ -69,7 +89,8 @@ The tool README lists the other limits.
 
 Code: MIT, see `LICENSE`.
 
-The data this code reads (human annotations and ray crossings of PHerc. Paris 4) is published by
+The data this code reads (human annotations and ray crossings of PHerc. Paris 4, CT chunks, and
+for one experiment the human-verified patches) is published by
 the Vesuvius Challenge under CC BY-NC 4.0 and is not redistributed here. The annotations and
 crossings sit in the frame of the 2026 Paris 4 scan `20260411134726` (2.4 µm). Cite both datasets:
 

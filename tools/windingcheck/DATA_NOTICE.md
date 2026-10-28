@@ -9,8 +9,15 @@ time from the Vesuvius Challenge data server (`https://dl.ash2txt.org/datasets/s
   (the `spiral-input` dataset, 2026-07);
 - with `--crossings`: the `winding_inference/` ray crossings (about 170 MB).
 
+`windingcheck normals` (optional) reads chunks of level 2 of the PHerc. Paris 4 2.4 µm scan
+`20260411134726` from the Vesuvius Challenge open-data bucket
+(`https://vesuvius-challenge-open-data.s3.amazonaws.com/PHercParis4/volumes/`) at run time, about
+1.42 GB, into a local cache. Its output holds one unit vector and two numbers per human click,
+no CT values.
+
 The only scroll used is **PHerc. Paris 4 (Scroll 1)**. The annotations and crossings are in the
-frame of the 2026 Paris 4 scan `20260411134726` (2.4 µm); `windingcheck` reads no CT from it.
+frame of the 2026 Paris 4 scan `20260411134726` (2.4 µm); only `windingcheck normals` reads CT
+from it.
 
 ## Licence and terms
 

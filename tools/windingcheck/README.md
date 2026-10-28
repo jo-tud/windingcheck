@@ -1,7 +1,8 @@
-# windingcheck v0.1
+# windingcheck v0.1.2
 
 Score automatic winding constraints against human winding annotations, and generate new
-relative-winding constraints from the organisers' neural ray crossings. CPU only, no CT read.
+relative-winding constraints from the organisers' neural ray crossings. CPU only. Only the optional
+`normals` command reads CT (about 1.42 GB for the held-out clicks, see below).
 
 Any winding source becomes **chains**: points with a relative sheet count. That covers VC3D
 point-collection files (`relative_windings.json`, `same_windings.json`, anything a generator
@@ -110,6 +111,55 @@ right, 4.8% wrong. The formula counts only errors the scorer can see, which is w
 rule "saves" 1.40–2.80 h. Details: `experiments/2026-10-13-claims-noct-generator/` and
 `experiments/2026-10-13-windingcheck-baselines/`.
 
+## Matching along the CT sheet normal (new in v0.1.2)
+
+By default the scorer matches along the human chain's direction, which misses tests (and reads
+some correct claims as wrong) where the sheet is tilted against the chain (see Limits). `windingcheck normals` measures the sheet normal in the
+CT at every human click instead, and `score --normals` (also `generate --score --normals`) matches
+along it:
+
+    windingcheck normals --heldout --z-band 7000 17000 --out normals.json
+    windingcheck score --heldout --crossings $W --normals normals.json
+    windingcheck generate --claims --crossings $W --out claims_every50.json --every 50 \
+      --score --heldout --normals normals.json --json score_ct.json
+
+`normals` reads level 2 (9.6 µm voxels, the frame of the annotations) of the public PHerc. Paris 4
+2.4 µm scan `20260411134726` from the Vesuvius Challenge open-data bucket, 677 chunks of 2 MiB
+(1.42 GB) for the held-out clicks, and keeps them in `data/ct_cache/` (`--cache` or
+`WINDINGCHECK_CT_CACHE` to move it). Once the chunks are local it takes 8 s. The normal is the
+structure tensor of the raw CT around the click (gradient σ 1.0 voxel, smoothing σ 3.0 voxels,
+a box of ±18 voxels): the eigenvector of the largest eigenvalue. A click whose box is more than
+20% outside the scroll mask gets no normal and keeps the chain direction. The output file holds
+one unit vector, a coherence and a zero share per click, no CT values. `--z-band 7000 17000`
+gives the normals the numbers below were made with: 1,099 of the 1,101 held-out clicks; the 2
+clicks above z 17,000 keep the chain direction. Without `--z-band` they get a CT normal too.
+
+Held out, 974 adjacent human pairs, brackets 95% CIs from the bootstrap over human chains:
+
+| Source | Adjacent exact, per test | Per human pair | Coverage of adjacent pairs |
+|---|---|---|---|
+| raw crossings | 91.2% of 1,375 | | 62.1% |
+| random cut, 10 seeds pooled | 93.8% of 8,320 | | 49.0% (mean) |
+| **`generate --claims`** | **97.0% of 931 [94.8–98.8]** | **95.4% of 503 [92.3–98.0]** | **51.6%** |
+| generator − random cut | **+3.2 points [+1.3, +5.6]** | | +2.6 [+0.6, +4.5] |
+
+Every source rises against the chain-direction table above. The gain over random cuts shrinks
+from +7.2 to +3.2 points: random cuts carry more tests on steeply tilted sheets, where the
+chain-direction match was most wrong. Since the coverages now differ by 2.6 points, this is not a
+comparison at equal coverage. 17 of the 1,433 held-out tests of `generate --claims` have the wrong
+sign (12 of 1,060 before). To re-make every number in this section, and compare it with the
+stored values, run `experiments/2026-10-23-windingcheck-ct-normal/run.py` (its README has the
+commands).
+
+**Checked on real sheets.** On the held-out Paris 4 clicks that lie on a human-verified patch (807
+of 1,101), I move each click 4–24 voxels along its patch and keep its own sheet count, so every
+claim is correct (`experiments/2026-10-23-windingcheck-real-sheets/`, which downloads the 0.41 GB
+of patches and re-makes every number). The sheet-normal match reads 99.9% exact (3,544 adjacent
+tests), 99.6% at 30–45° and 99.8% at 45–90°, and reads every planted ±1 slip as wrong (193 of
+193). The chain-direction match reads 98.4% at 30–45° and 95.5% at 45–90° on the same claims, with
+about half the tests (1,836) and a wrong share of 1.5% instead of 0.14%. Scope: points at most 24
+voxels from a click, on verified patches (Limits).
+
 ## Output format
 
 `generate` writes a **VC3D point-collection JSON** (`vc_pointcollections_json_version` 1): the
@@ -128,7 +178,8 @@ points). I have not tested loading it in the VC3D GUI.
 ## How it works
 
 **Matching.** A candidate point counts as on the same sheet as a human click when it is within
-`tol_n` of the click along the human chain's direction (≈ the sheet normal) and within
+`tol_n` of the click along the human chain's direction (≈ the sheet normal; with `--normals`, the
+CT sheet normal) and within
 `tol_t` = 25 voxels along the sheet. `tol_n` = 0.35 × the local sheet spacing, clipped to
 [1.5, 4] voxels, so a point cannot match two neighbouring sheets. Each pair of points from one
 candidate chain that lands on two clicks of one human chain is a **test**.
@@ -182,6 +233,8 @@ meant a better spiral fit.
   show a gain or a loss of the size that matters. Its fit files and the commands that built the
   control arms are not in this repository. A later, larger test of the raw crossings on another
   slab made the fit slip more, not less, though its no-constraint fit had not fully converged.
+  All these fits ran 12,000 steps; villa's default is 30,000, and its DT losses start at step
+  25,000, so they were off.
   Treat `generate --claims` as a filter with a measured precision, not as a fit improvement.
 - **The held-out chains were not fully held out.** The model's coefficients and τ were fitted on
   the even chains only. But I looked at the odd (held-out) chains in a follow-up analysis of v1
@@ -193,6 +246,21 @@ meant a better spiral fit.
   --claims` count the sheets the wrong way round: the chain runs against the human winding
   direction, because `wind_a` follows the ray's order. A spiral fitter would read these as
   reversed constraints. v0.1 does not fix this.
+- **The default match misses tests on tilted sheets.** It matches a generated point to a human
+  click along the direction of the human chain, not along the sheet normal. Where the sheet is
+  tilted against the chain (on the held-out PHerc. Paris 4 clicks the median angle is about 25°),
+  a point on the neighbouring sheet can fall inside the match window, so a correct claim can count
+  as wrong or not be tested at all. On synthetic spiral sheets 12 voxels apart where every claim is
+  correct, this match reads 50% exact at 30–45° tilt and 7% above 45°. On real Paris 4 sheets,
+  with claims known to be correct, it reads 98.4% at 30–45° and 95.5% at 45–90°: its cost there is
+  mostly fewer tests (1,836 adjacent tests against 3,544 for the sheet-normal match) and a wrong
+  share of 1.5% instead of 0.14%. So the chain-direction numbers above do not read low by the
+  synthetic amount. When I re-score the same held-out chains along the sheet normal measured in
+  the CT, every number rises, and the gain of `generate --claims` over random cuts shrinks from
+  +7.2 to +3.2 points ("Matching along the CT sheet normal" above). I checked that match on real
+  sheets only for points at most 24 voxels from a click, on human-verified patches (99.9% exact);
+  farther points and sheet contacts the patches avoid are not tested, and there it could read too
+  high.
 - **The crossing model's training set is unknown, and Paris 4 is probably in it.** The crossings
   come from villa's `winding_model_3d_large_11`. I do not know exactly what it was trained on, but
   the crossings' own `manifest.json` points that way: `source_attributes.reference_zarr` lies
@@ -219,7 +287,8 @@ meant a better spiral fit.
   crops and my notes are not published.
 - The full-volume output is 4.0 GB. Use `--every N` for VC3D.
 - `windingcheck.ct` (CT sampling for the research version) is not used by any command and needs
-  the separate `inkcheck` package.
+  the separate `inkcheck` package. `windingcheck normals` has its own CT reader and needs no extra
+  package.
 
 ## Licence, data and credits
 

@@ -153,3 +153,51 @@ def test_in_memory_score_equals_file_score(tmp_path):
     cand = from_arrays(c.xyz + rng.normal(scale=0.3, size=c.xyz.shape), lv, c.chain)
     save_pcl(cand, tmp_path / "g.json")
     assert score_chains(t, cand) == score_chains(t, load_pcl(tmp_path / "g.json"))
+
+
+def _tilted_case(tilt_deg=40.0, pitch=12.0, n_chains=8):
+    """Plane sheets x = pitch * k (normal +x), human chains tilted by tilt_deg in the xy plane, and
+    candidate rays along +x whose every claim is correct."""
+    a = np.deg2rad(tilt_deg)
+    xyz, lvl, ch = [], [], []
+    for c in range(n_chains):
+        for k in range(6):
+            xyz.append([pitch * k, 400.0 * c + pitch * k * np.tan(a), 0.0])
+            lvl.append(k)
+            ch.append(c)
+    human = from_arrays(xyz, lvl, ch)
+    cx, cl, cc = [], [], []
+    for r, y in enumerate(np.arange(-40.0, 400.0 * n_chains, 2.0)):
+        for k in range(6):
+            cx.append([pitch * k, y, 0.0])
+            cl.append(k)
+            cc.append(r)
+    return human, from_arrays(cx, cl, cc)
+
+
+def test_default_normal_is_unchanged():
+    c = _spiral_chains()
+    a, b = build_truth(c), build_truth(c, normals=np.full((len(c), 3), np.nan))
+    assert np.array_equal(a.normal, b.normal, equal_nan=True)
+    assert np.array_equal(a.tol_n, b.tol_n, equal_nan=True)
+
+
+def test_sheet_normal_fixes_tilted_match():
+    human, cand = _tilted_case()
+    old = score_chains(build_truth(human), cand)
+    new = score_chains(build_truth(human, normals=np.tile([1.0, 0, 0], (len(human), 1))), cand)
+    assert old["adjacent_exact"] < 0.9          # chain direction ≠ sheet normal: neighbour sheet leaks in
+    assert new["adjacent_exact"] == 1.0 and new["exact"] == 1.0
+
+
+def test_normals_follow_input_row_order():
+    human, cand = _tilted_case()
+    perm = np.random.default_rng(0).permutation(len(human))
+    shuffled = from_arrays(human.xyz[perm], human.level[perm], human.chain[perm])
+    nrm = np.tile([1.0, 0, 0], (len(human), 1))
+    nrm[perm == 3] = np.nan                       # one row falls back to the chain direction
+    a = build_truth(shuffled, normals=nrm)
+    nrm0 = np.tile([1.0, 0, 0], (len(human), 1))
+    nrm0[3] = np.nan
+    b = build_truth(human, normals=nrm0)
+    assert np.allclose(a.normal, b.normal) and np.allclose(a.tol_n, b.tol_n)
